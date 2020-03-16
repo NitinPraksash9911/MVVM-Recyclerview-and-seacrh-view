@@ -1,9 +1,10 @@
-package com.example.sampleappmovielist
+package com.example.sampleappmovielist.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.sampleappmovielist.R
 
-class MainActivity : AppCompatActivity() {
+class MovieListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

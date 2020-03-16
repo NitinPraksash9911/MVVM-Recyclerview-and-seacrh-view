@@ -87,6 +87,7 @@ ext {
     rxAndroidVersion = '2.1.1'
     retrofit_version = '2.7.1'
     okHttp_interceptor_version = '4.4.0'
+    dagger2_version = '2.26'
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -125,4 +126,11 @@ dependencies {
     //rx java
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+
+    // dagger
+    implementation "com.google.dagger:dagger:$dagger2_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    implementation "com.google.dagger:dagger-android:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-support:$dagger2_version"
 }
