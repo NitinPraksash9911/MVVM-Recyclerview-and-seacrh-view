@@ -1,0 +1,128 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android
+        {
+
+            signingConfigs {
+
+                debug {
+                    storePassword keystoreProperties['storePassword']
+                    keyPassword keystoreProperties['keyPassword']
+                    keyAlias keystoreProperties['keyAliasDebug']
+                    storeFile file(keystoreProperties['debugFile'])
+
+                }
+                release {
+                    storePassword keystoreProperties['storePassword']
+                    keyPassword keystoreProperties['keyPassword']
+                    keyAlias keystoreProperties['keyAliasRelease']
+                    storeFile file(keystoreProperties['releaseFile'])
+                }
+            }
+            dataBinding.enabled = true
+
+            compileSdkVersion 29
+            buildToolsVersion "29.0.3"
+
+            defaultConfig {
+                applicationId "com.example.sampleappmovielist"
+                minSdkVersion 16
+                targetSdkVersion 29
+                versionCode 1
+                versionName "1.0"
+
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+            }
+
+            buildTypes {
+                release {
+                    minifyEnabled false
+                    debuggable false
+                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                    signingConfig signingConfigs.release
+                    buildConfigField "String", "BASE_URL", "\"https://api.flickr.com/services/\""
+
+                }
+                debug {
+                    minifyEnabled false
+                    debuggable true
+                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                    signingConfig signingConfigs.debug
+                    buildConfigField "String", "BASE_URL", "\"https://api.flickr.com/services/\""
+
+                }
+
+
+            }
+
+
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
+
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_1_8.toString()
+            }
+
+        }
+
+
+ext {
+    glide_version = '4.11.0'
+    lifecycle_version = "2.2.0"
+    materail_version = "1.1.0"
+    card_view_version = "1.0.0"
+    rxJavaVersion = '2.2.2'
+    rxAndroidVersion = '2.1.1'
+    retrofit_version = '2.7.1'
+    okHttp_interceptor_version = '4.4.0'
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+
+    //design
+    implementation "androidx.cardview:cardview:$card_view_version"
+    implementation "com.google.android.material:material:$materail_version"
+
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp_interceptor_version"
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.1'
+
+    //life cycle
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+
+    // glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+
+    //rx java
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+}
