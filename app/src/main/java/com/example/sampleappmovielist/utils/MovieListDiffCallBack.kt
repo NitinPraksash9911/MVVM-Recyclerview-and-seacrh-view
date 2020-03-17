@@ -22,7 +22,7 @@ class MovieListDiffCallBack(oldMovieData: List<Datum>?, newMovieData: List<Datum
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return mOldMovieData!![oldItemPosition].getId() == mNewMovieData!![newItemPosition].getId()
+        return mOldMovieData!![oldItemPosition].id == mNewMovieData!![newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
