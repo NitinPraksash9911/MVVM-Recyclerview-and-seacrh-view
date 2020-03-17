@@ -29,9 +29,4 @@ class MovieListRepository {
 
     }
 
-    private fun handleError(exception: String?) {
-
-
-        Log.d("asdada", exception)
-    }
 }

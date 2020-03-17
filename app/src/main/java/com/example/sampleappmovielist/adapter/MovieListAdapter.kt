@@ -71,7 +71,7 @@ class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieListViewHold
             } else {
                 val query = constraint.toString().toLowerCase(Locale.ROOT).trim()
                 val searchResults = movieListFull.filter { data ->
-                    data.genre.toLowerCase(Locale.ROOT).contains(query) || data.title.toLowerCase(
+                    data.genre!!.toLowerCase(Locale.ROOT).contains(query) || data.title!!.toLowerCase(
                         Locale.ROOT
                     ).contains(query)
                 }

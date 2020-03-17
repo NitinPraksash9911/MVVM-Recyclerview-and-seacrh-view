@@ -52,12 +52,11 @@ class MovieListActivity : AppCompatActivity() {
                 movieListAdapter.setMovieList(it.data as ArrayList<Datum>)
 
 
-
             } else {
                 binding.progressHorizontal.visibility = View.VISIBLE
                 Snackbar.make(
                     binding.movieRecyclerView,
-                    it.error,
+                    it.error!!,
                     Snackbar.LENGTH_LONG
                 ).show()
             }

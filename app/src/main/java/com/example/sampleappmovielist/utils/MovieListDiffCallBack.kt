@@ -28,7 +28,7 @@ class MovieListDiffCallBack(oldMovieData: List<Datum>?, newMovieData: List<Datum
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldMovie: Datum = mOldMovieData!![oldItemPosition]
         val newMovie: Datum = mNewMovieData!![newItemPosition]
-        return oldMovie.id.equals(newMovie.id)
+        return oldMovie.id!!.equals(newMovie.id)
     }
 
     @Nullable
