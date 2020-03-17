@@ -7,8 +7,10 @@ import androidx.core.content.ContextCompat.getSystemService
 
 
 /**
- * Created by   on 17/03/20.
+ * Created by Nitin  on 17/03/20.
  */
+
+
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -27,8 +29,6 @@ class MyApplication : Application() {
 
     companion object {
         var instance: MyApplication? = null
-            private set
-
         fun hasNetwork(): Boolean {
             return instance!!.isNetworkConnected()
         }

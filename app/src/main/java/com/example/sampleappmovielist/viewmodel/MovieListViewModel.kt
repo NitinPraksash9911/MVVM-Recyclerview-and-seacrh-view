@@ -9,13 +9,12 @@ import io.reactivex.disposables.CompositeDisposable
 class MovieListViewModel : ViewModel() {
 
     val movieLiveData = MutableLiveData<MovieDataModel>()
-    private val movieListRepository = MovieListRepository()
 
     private val compositeDisposable = CompositeDisposable()
 
     fun getMovieListData() {
-        compositeDisposable.add(movieListRepository.getMovieListData())
-        movieListRepository.movieLiveData.observeForever {
+        compositeDisposable.add(MovieListRepository.getMovieListData())
+        MovieListRepository.movieLiveData.observeForever {
             movieLiveData.value = it
         }
     }

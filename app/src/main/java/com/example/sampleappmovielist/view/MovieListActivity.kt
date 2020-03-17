@@ -1,6 +1,10 @@
 package com.example.sampleappmovielist.view
 
+import android.app.SearchManager
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,6 +18,7 @@ import com.example.sampleappmovielist.R
 import com.example.sampleappmovielist.adapter.MovieListAdapter
 import com.example.sampleappmovielist.databinding.ActivityMainBinding
 import com.example.sampleappmovielist.model.Datum
+import com.example.sampleappmovielist.network.NetworkResponse
 import com.example.sampleappmovielist.viewmodel.MovieListViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -26,6 +31,7 @@ class MovieListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
         init()
     }
 
@@ -42,27 +48,55 @@ class MovieListActivity : AppCompatActivity() {
 
     }
 
+
     private fun initObserver() {
 
         viewModel.getMovieListData()
 
         viewModel.movieLiveData.observe(this) {
-            if (it != null && it.error.isNullOrBlank()) {
-                binding.progressHorizontal.visibility = View.GONE
-                movieListAdapter.setMovieList(it.data as ArrayList<Datum>)
 
+
+            if (it != null && it.response == NetworkResponse.FROM_CACHE || it.response == NetworkResponse.SUCCESS) {
+                binding.progressHorizontal.visibility = View.GONE
+                Log.d("vm","calling")
+                movieListAdapter.setMovieList(it.data as ArrayList<Datum>)
 
             } else {
                 binding.progressHorizontal.visibility = View.VISIBLE
-                Snackbar.make(
-                    binding.movieRecyclerView,
-                    it.error!!,
-                    Snackbar.LENGTH_LONG
-                ).show()
             }
-
+            /*to check from where data is coming cache or webservice
+                                  * and check is internet is available or not
+                                  * */
+            showResponseStatus(it.response!!)
 
         }
+
+    }
+
+    private fun showResponseStatus(networkResponse: NetworkResponse) {
+
+        when (networkResponse) {
+            NetworkResponse.SUCCESS -> showSnackBar("Success", Color.GREEN)
+            NetworkResponse.FROM_CACHE -> showSnackBar(
+                "Please check your internet connection to update latest items",
+                Color.DKGRAY
+            )
+            NetworkResponse.NO_INTERNET -> showSnackBar(
+                "Please check your internet connection",
+                Color.RED
+            )
+            NetworkResponse.OTHERS -> showSnackBar("Something went wrong, try later", Color.RED)
+        }
+    }
+
+    private fun showSnackBar(status: String, bgColor: Int) {
+        val snackbar = Snackbar.make(
+            binding.mainLayout,
+            status,
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.view.setBackgroundColor(bgColor)
+        snackbar.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -77,8 +111,15 @@ class MovieListActivity : AppCompatActivity() {
     /** search view initialization **/
     private fun searchViewInit(menu: Menu?) {
         val searchItem = menu?.findItem(R.id.search_action)
-        val searchView = searchItem!!.actionView as SearchView
-        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = (searchItem!!.actionView as SearchView).apply {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        }
+        searchView.maxWidth = Int.MAX_VALUE
+        searchView.imeOptions.apply {
+            EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            EditorInfo.IME_ACTION_DONE
+        }
 
         // to search item from list
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

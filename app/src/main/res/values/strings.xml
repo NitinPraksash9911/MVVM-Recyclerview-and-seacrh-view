@@ -2,4 +2,5 @@
     <string name="app_name">SampleAppMovieList</string>
     <string name="movieimage">movieImage</string>
     <string name="search">search</string>
+    <string name="no_item_found">No item found</string>
 </resources>
