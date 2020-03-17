@@ -22,15 +22,16 @@ class MovieListRepository {
 
             },
                 { error ->
-                    handleError(error.message)
+                    val model = MovieDataModel()
+                    model.error = error.message
+                    movieLiveData.value = model
                 })
-
 
     }
 
     private fun handleError(exception: String?) {
 
 
-        Log.d("asdada",exception)
+        Log.d("asdada", exception)
     }
 }

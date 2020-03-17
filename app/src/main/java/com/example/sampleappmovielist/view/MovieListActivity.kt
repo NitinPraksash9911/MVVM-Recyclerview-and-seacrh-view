@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.sampleappmovielist.MyApplication
 import com.example.sampleappmovielist.R
 import com.example.sampleappmovielist.adapter.MovieListAdapter
 import com.example.sampleappmovielist.databinding.ActivityMainBinding
@@ -33,20 +31,38 @@ class MovieListActivity : AppCompatActivity() {
 
     private fun init() {
         viewModel = ViewModelProvider(this).get(MovieListViewModel::class.java)
-        movieListAdapter = MovieListAdapter()
 
-
-
-        binding.movieRecyclerView.adapter = movieListAdapter
+        binding.movieRecyclerView.apply {
+            movieListAdapter = MovieListAdapter()
+            adapter = movieListAdapter
+        }
 
         //data observer
         initObserver()
-        if (!MyApplication.hasNetwork()) {
-            Snackbar.make(
-                binding.movieRecyclerView,
-                "Please check your internet connection",
-                Snackbar.LENGTH_LONG
-            ).show()
+
+    }
+
+    private fun initObserver() {
+
+        viewModel.getMovieListData()
+
+        viewModel.movieLiveData.observe(this) {
+            if (it != null && it.error.isNullOrBlank()) {
+                binding.progressHorizontal.visibility = View.GONE
+                movieListAdapter.setMovieList(it.data as ArrayList<Datum>)
+
+
+
+            } else {
+                binding.progressHorizontal.visibility = View.VISIBLE
+                Snackbar.make(
+                    binding.movieRecyclerView,
+                    it.error,
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+
+
         }
     }
 
@@ -59,6 +75,7 @@ class MovieListActivity : AppCompatActivity() {
         return true
     }
 
+    /** search view initialization **/
     private fun searchViewInit(menu: Menu?) {
         val searchItem = menu?.findItem(R.id.search_action)
         val searchView = searchItem!!.actionView as SearchView
@@ -92,19 +109,5 @@ class MovieListActivity : AppCompatActivity() {
         })
     }
 
-    private fun initObserver() {
 
-        viewModel.getMovieListData()
-
-        viewModel.movieLiveData.observe(this) {
-            if (it != null) {
-                binding.progressHorizontal.visibility = View.GONE
-                movieListAdapter.setMovieList(it.data as ArrayList<Datum>)
-            } else {
-                binding.progressHorizontal.visibility = View.VISIBLE
-            }
-
-
-        }
-    }
 }

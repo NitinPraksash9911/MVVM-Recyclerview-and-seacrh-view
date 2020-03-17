@@ -9,10 +9,20 @@ public class MovieDataModel {
 
     @SerializedName("data")
     @Expose
-    private List<Datum> data = null;
+     List<Datum> data = null;
 
     public List<Datum> getData() {
         return data;
+    }
+
+    String error;
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public void setData(List<Datum> data) {
