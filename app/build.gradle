@@ -10,6 +10,7 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+
 android
         {
 
@@ -50,7 +51,7 @@ android
                     debuggable false
                     proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
                     signingConfig signingConfigs.release
-                    buildConfigField "String", "BASE_URL", "\"https://api.flickr.com/services/\""
+                    buildConfigField "String", "BASE_URL", "\" https://movies-sample.herokuapp.com/api/\""
 
                 }
                 debug {
@@ -58,7 +59,7 @@ android
                     debuggable true
                     proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
                     signingConfig signingConfigs.debug
-                    buildConfigField "String", "BASE_URL", "\"https://api.flickr.com/services/\""
+                    buildConfigField "String", "BASE_URL", "\" https://movies-sample.herokuapp.com/api/\""
 
                 }
 
