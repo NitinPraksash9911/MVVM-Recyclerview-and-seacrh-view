@@ -68,7 +68,7 @@ class MovieListActivity : AppCompatActivity() {
                 binding.progressHorizontal.visibility = View.VISIBLE
             }
             /*to check from where data is coming cache or webservice
-                                  * and check is internet is available or not
+                                  * and check if internet is available or not
                                   * */
             showResponseStatus(it.response!!)
 
