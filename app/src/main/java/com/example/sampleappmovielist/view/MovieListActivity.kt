@@ -2,28 +2,35 @@ package com.example.sampleappmovielist.view
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import android.util.Pair.create
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.SearchView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.sampleappmovielist.R
 import com.example.sampleappmovielist.adapter.MovieListAdapter
 import com.example.sampleappmovielist.databinding.ActivityMainBinding
+import com.example.sampleappmovielist.interfaces.MovieItemClickListner
 import com.example.sampleappmovielist.model.Datum
 import com.example.sampleappmovielist.network.NetworkResponse
 import com.example.sampleappmovielist.viewmodel.MovieListViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
-class MovieListActivity : AppCompatActivity() {
+class MovieListActivity : AppCompatActivity(),MovieItemClickListner {
 
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MovieListViewModel
@@ -43,7 +50,7 @@ class MovieListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MovieListViewModel::class.java)
 
         binding.movieRecyclerView.apply {
-            movieListAdapter = MovieListAdapter()
+            movieListAdapter = MovieListAdapter(this@MovieListActivity)
             adapter = movieListAdapter
         }
 
@@ -162,6 +169,17 @@ class MovieListActivity : AppCompatActivity() {
             super.onBackPressed()
 
         }
+    }
+
+    override fun movieItemClickLister(movieItem: Datum,imageView:ImageView,textView: TextView) {
+        Toast.makeText(this,movieItem.genre,Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, MovieDetailActivity::class.java)
+        intent.putExtra("movie",movieItem)
+        val imageViewPair = Pair<View,String>(imageView,"transImage")
+        val textViewPair = Pair<View,String>(textView,"transText")
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageViewPair,textViewPair)
+        startActivity(intent,options.toBundle())
+
     }
 
 }
