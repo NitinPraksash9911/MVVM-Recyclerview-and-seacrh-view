@@ -3,4 +3,8 @@
     <string name="movieimage">movieImage</string>
     <string name="search">search</string>
     <string name="no_item_found">No item found</string>
+    <string name="success">Success</string>
+    <string name="from_cache">Please check your internet connection to update latest items</string>
+    <string name="no_internet">Please check your internet connection</string>
+    <string name="other_error">Something went wrong, try later</string>
 </resources>

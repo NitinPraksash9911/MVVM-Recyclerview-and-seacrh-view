@@ -28,10 +28,14 @@ class MovieListActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MovieListViewModel
     lateinit var movieListAdapter: MovieListAdapter
+    lateinit var searchView: SearchView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
+        setSupportActionBar(binding.toolBar)
+
+        /*initialization*/
         init()
     }
 
@@ -58,7 +62,6 @@ class MovieListActivity : AppCompatActivity() {
 
             if (it != null && it.response == NetworkResponse.FROM_CACHE || it.response == NetworkResponse.SUCCESS) {
                 binding.progressHorizontal.visibility = View.GONE
-                Log.d("vm","calling")
                 movieListAdapter.setMovieList(it.data as ArrayList<Datum>)
 
             } else {
@@ -76,16 +79,16 @@ class MovieListActivity : AppCompatActivity() {
     private fun showResponseStatus(networkResponse: NetworkResponse) {
 
         when (networkResponse) {
-            NetworkResponse.SUCCESS -> showSnackBar("Success", Color.GREEN)
+            NetworkResponse.SUCCESS -> showSnackBar(getString(R.string.success), Color.GREEN)
             NetworkResponse.FROM_CACHE -> showSnackBar(
-                "Please check your internet connection to update latest items",
+                getString(R.string.from_cache),
                 Color.DKGRAY
             )
             NetworkResponse.NO_INTERNET -> showSnackBar(
-                "Please check your internet connection",
+                getString(R.string.no_internet),
                 Color.RED
             )
-            NetworkResponse.OTHERS -> showSnackBar("Something went wrong, try later", Color.RED)
+            NetworkResponse.OTHERS -> showSnackBar(getString(R.string.other_error), Color.RED)
         }
     }
 
@@ -112,7 +115,7 @@ class MovieListActivity : AppCompatActivity() {
     private fun searchViewInit(menu: Menu?) {
         val searchItem = menu?.findItem(R.id.search_action)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = (searchItem!!.actionView as SearchView).apply {
+        searchView = (searchItem!!.actionView as SearchView).apply {
             setSearchableInfo(searchManager.getSearchableInfo(componentName))
         }
         searchView.maxWidth = Int.MAX_VALUE
@@ -149,5 +152,16 @@ class MovieListActivity : AppCompatActivity() {
         })
     }
 
+
+    /*on Back pressed we checking if search view is expanded then close it first and then close activity*/
+    override fun onBackPressed() {
+        if (!searchView.isIconified) {
+            searchView.isIconified = true
+            searchView.clearFocus()
+        } else {
+            super.onBackPressed()
+
+        }
+    }
 
 }
